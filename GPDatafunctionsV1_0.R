@@ -3,7 +3,6 @@
 # Data generation functions for GP models
 #
 ##################################################
-# covariance_function       - Covariance function for Gaussian process
 # GenerateSGPData           - Generate multivariate spatially correlated 
 #                             data only, no nugget
 # GenerateSGPData           - Generate multivariate spatially correlated 
@@ -31,14 +30,6 @@ require(fields)
 require(mvtnorm)
 
 
-###################################
-# covariance_function
-# Squared exponential covariance (Kern K) function
-# l - length-scale
-# var - variance 
-covariance_function <- function (distance, var, l) {
-  var * exp(-(distance ^ 2) / (2 * (l^2)))
-}
 
 
 ################################
@@ -67,7 +58,6 @@ GenerateSGPData <- function(grid_unit_x = 10,grid_unit_y =10,
   # NOTE: it should be the lower-triangular matrix that is multiplied by the vector, but
   # R returns the upper triangular, so need to transpose it with t()
   z0_sgp <- t(chol(kronecker(Sigma0, Kxx))) %*% a0
-  dim(z0_sgp)
   return(list(nspec=nspec,nsite=nsite,dis=dis,z0_sgp=z0_sgp,mtype="mgp",
               Sigma0=Sigma0,l0=l0,var=var0,a0=a0,
               grid_unit_x = grid_unit_x,grid_unit_y =grid_unit_y,#scale=scale,
@@ -110,7 +100,6 @@ GenerateSGPTauData <- function(grid_unit_x = 10,grid_unit_y =10,
   # NOTE: it should be the lower-triangular matrix that is multiplied by the vector, but
   # R returns the upper triangular, so need to transpose it with t()
   z0_sgp <- t(chol(kronecker(Sigma0, KTau_xx))) %*% a0
-  dim(z0_sgp)
   return(list(nspec=nspec,nsite=nsite,dis=dis,z0_sgp=z0_sgp,mtype="mgp",
               Sigma0=Sigma0,l0=l0,var=var0,a0=a0,tau0=tau0,
               grid_unit_x = grid_unit_x,grid_unit_y =grid_unit_y,
@@ -426,7 +415,6 @@ GenerateSpatialData <- function( grid_unit_x = 10,grid_unit_y =10,
   nsite =grid_unit_y*grid_unit_x
   x <- expand.grid(lat = (1:grid_unit_y)*scale_y, long = (1:grid_unit_x)*scale_x)
   grid_cell_area = scale_x*scale_y  # size of a grid cell
-  dim(x)
   dis <- (fields::rdist(x, x))
   return(list(nspec=nspec,nsite=nsite,dis=dis,mtype="",
               grid_unit_x = grid_unit_x,grid_unit_y =grid_unit_y,

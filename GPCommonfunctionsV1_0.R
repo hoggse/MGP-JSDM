@@ -23,6 +23,8 @@
 #
 require(miscTools)
 require(fields)
+require(monomvn)
+require(mvtnorm)
 
 
 ###################################
@@ -138,8 +140,6 @@ createSigmaNSet <- function(corVar,mx_size=2) {
 # df=1         - degrees of freedom for Wishart distribution
 #                will use .df = mx_size + df  
 #
-require(monomvn)
-require(mvtnorm)
 
 createSigmaRand <- function(no_mx=1,mx_size=2,df=1) {
   if (no_mx == 0) {return(NULL)}
@@ -177,4 +177,7 @@ createMySig2List <- function(no_rand_mx=4,corVars=c(-0.5,-0.25,0,0.25,0.5,0.75,0
   }
   return(sigmaList)
 }
+
+
+
 

@@ -4,7 +4,6 @@
 #
 # function list:
 # 
-# covariance_function:            Determines spatial correlation between points
 # MGP_tau_fit:                    Fit data with MGP model with tau offset,
 #                                 can set abundance or binary (PA) option
 # MGP_tau_fit_PA_clpy:            Calls MGP_tau_fit with binary option
@@ -33,22 +32,14 @@
 reticulate::use_condaenv("r-tensorflow")
 
 require(greta)
+require(bayesplot)
+require(coda)
 
 
 # mgp_data provides the number of species, sites and covariates, 
 #  dis (distance data), y0 data
 
 
-
-#################################################
-#
-# Function: covariance_function
-#
-# This is the covariance function used to find K 
-# spatial correlation between points.
-covariance_function <- function (distance, var, l) {
-  var * exp(-(distance ^ 2) / (2 * (l^2)))
-}
 
 
 
@@ -1004,8 +995,6 @@ IPP_fit <- function(process_data,nwarmup=2500,nsample=1000, nchain=4,scale1=TRUE
 # plot_flag        - traceplots for params if true, default false
 # prt_flag=FALSE   - print rhat and neff results if true, default false
 
-require(bayesplot)
-require(coda)
 
 
 displayResults <- function(draws,nspec=1,mpg_flag=FALSE,param_data=NULL,plot_flag=FALSE,prt_flag=FALSE) {
@@ -1062,8 +1051,9 @@ displayResults <- function(draws,nspec=1,mpg_flag=FALSE,param_data=NULL,plot_fla
 # get diagonal indices from flattened matrix 
 # for all diagonal elements 
 # assume square mx of size nside
-# nside=2
-# nside=3
+# used by displayResults
+#
+
 getDiagIndex<- function(nside) {
   diag_idx <- list()
   for (i in 1:nside) {
