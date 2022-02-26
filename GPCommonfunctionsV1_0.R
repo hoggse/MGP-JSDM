@@ -11,8 +11,10 @@
 #
 #########################################################
 #
+# global constants          - Constants such as model type strings
 # covariance_function       - Covariance function for Gaussian process
 # get_data_subset           - Subset MGPData by species or covariates
+# makecalclist              - returns list of parameter distribution values for each parameter from draws chain
 # createSigma2Set           - Create a 2X2 covariance mx with given covariance
 # createSigmaNSet           - Create a NXN covariance mx with given covariance
 # createSigmaRand           - Create a NXN covariance mx with random covariance,
@@ -25,6 +27,25 @@ require(miscTools)
 require(fields)
 require(monomvn)
 require(mvtnorm)
+
+ipp_str="ipp"
+mgp_str="mgp"
+mpg_str = "mpg"  #deals with spelling mistake in early models
+mgp_nospat_str = "mgp_nospat"
+nospat_str = "mgp_nospat"
+mgp_spidep_str = "mgp_spidep"
+spidep_str = "mgp_spidep"
+model_type=mgp_str
+nspec=2
+species_names = c("species 1","species 2")
+cov_names = c("Cov 1")
+set.seed(123)
+
+
+prefix.resp = "fit_"
+prefix.dr = "dr_"
+prefix.m = "m_"
+prefix.fit= "fit_"
 
 
 ###################################
@@ -79,6 +100,66 @@ get_data_subset <- function(mpg_data,sp_subset,cov_subset,sp_names=NULL) {
   mpg_data$timestamp = format(Sys.time(),"%y%m%d_%H%M")
   return(mpg_data)
 }
+
+
+
+####################################
+#
+# makecalclist
+#
+# returns list of parameter distribution values for each parameter
+# drawsList - 1 chain from a MCMC file (e.g. from greta)
+#
+makecalclist <- function(drawsList=draws[[1]]) {
+  listOfLists <- lapply(1:nrow(drawsList),function(i) {drawsList[i,]} )
+  #str(listOfLists)
+  return(listOfLists)
+}
+
+
+####################################
+#
+# removeinf
+#
+# remove -inf values
+#
+
+removeinf <- function(logpdf_init) {
+  no_chain.all = length(logpdf_init)
+  no_spec.all = dim(logpdf_init[[ch_idx]])[3]
+  no_loc.all = dim(logpdf_init[[ch_idx]])[2]
+  samples.all = dim(logpdf_init[[ch_idx]])[1]
+  logpdf_renew = list()
+  ch_idx=1
+  for ( ch_idx in 1:no_chain.all ) {
+    rm_set = NULL
+    for ( sp_idx in 1:no_spec.all ) {
+      for ( loc_idx in 1:no_loc.all ) {
+        rm_idx = which(logpdf_init[[ch_idx]][,loc_idx,sp_idx]==-Inf)
+        if ( is.integer(rm_idx) && length(rm_idx)!=0 ) {rm_set= c(rm_set,rm_idx)}
+      }
+    }
+    cat("Chain ",ch_idx," rm set:","\n")
+    print(rm_set)
+    # if non-null set, remove the samples for all entries
+    if ( !is.null(rm_set) ) {
+      new_dim = c((samples.all-length(rm_set)),no_loc.all,no_spec.all)
+      logpdf_renew[[ch_idx]] = logpdf_init[[ch_idx]][-rm_set,1:no_loc.all,1:no_spec.all]
+    } else {
+      logpdf_renew[[ch_idx]] = logpdf_init[[ch_idx]]
+    }
+  }
+  av_logpdf_renew <- av.pred.y0.mc(logpdf_renew)
+  str(logpdf_renew)
+  for ( ch_idx in 1:no_chain.all ) {
+    for ( sp_idx in 1:no_spec.all ) {
+      cat("chain ", ch_idx," species ",sp_idx," min: ",min(av_logpdf_renew[[ch_idx]][,sp_idx])," max: ",max(av_logpdf_renew[[ch_idx]][,sp_idx]),"\n" )
+    }
+  }
+  return(list(logpdf_renew=logpdf_renew,av_logpdf_renew=av_logpdf_renew))
+}
+
+
 
 
 

@@ -1,6 +1,9 @@
 #####################################################
 #
 # Functions to combine a given set of data
+#           of otherwise modify a data set
+#           e.g. binary from abundance data
+#                training datasets
 #
 # Used by for some integrated data sets where
 # correlation is calculated over a combined set of spatial data
@@ -14,6 +17,10 @@
 #       generateCombinedDisMixed      - given two mixed sets of data: 
 #                                       1 set of presence-only and 1 set of abundance  data
 #       generateCombinedDisAny        - given two sets of data in a range of data format
+#
+# Data Transforms
+#
+# convertAbundanceToBinaryDAta          - Converts Abundance count data to Binary observation data
 
 ################################
 # generateXCoordsGivenGenData
@@ -140,3 +147,24 @@ generateCombinedDisAny <- function(my_data1, my_data2) {
 
 
 
+
+################################
+#
+# convertAbuanceToBinaryDAta
+#
+# Converts Abundance count data to Binary observation data
+# returns data in similar format to mgp_data, except y0 observations now binary
+#
+# mgp_data     - dataset in real or generated data format, must have matrix of y0 data
+#                assumes count data, where y0>0 means species is present
+
+convertAbundanceToBinaryDAta <- function(mgp_data) {
+  if ( is.null(mgp_data)  ||  is.null(mgp_data$y0) ) {cat("convertAbuanceToBinaryDAta ","Must  have non-null data","\n");return(NULL)}
+  #  myData$y0 <- rpois(myData$nsite * myData$nspec, myData$lambda0_mu*myData$grid_cell_area)
+  bin_data = mgp_data
+  bin_data$abund_cnt = bin_data$y0
+  y0_bin = as.integer(mgp_data$y0>0)
+  dim(y0_bin) <- dim(mgp_data$y0)
+  bin_data$y0 = y0_bin
+  return(bin_data)
+}
