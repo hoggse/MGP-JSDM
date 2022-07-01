@@ -8,6 +8,12 @@
 #                 simplified presence-only model,
 #                 integrated data model
 #
+###################################################################
+#
+# original code without Github style comments
+#
+###################################################################
+#
 
 
 #  1) generating the data

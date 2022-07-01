@@ -11,6 +11,12 @@
 #           Fitting SGLM abundance to training data set
 #           Calculating RMSE
 #
+###################################################################
+#
+# original code without Github style comments
+#
+###################################################################
+#
 
 
 #  1) generating the data

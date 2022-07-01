@@ -2,6 +2,9 @@
 #
 # Calculate functions for GP models
 #
+#
+# original code without Github style comments
+#
 ################################################################
 #
 # greta calculate seemed unable to run calculate for complex

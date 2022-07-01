@@ -5,9 +5,14 @@
 #           e.g. binary from abundance data
 #                training datasets
 #
+#
+# original code without Github style comments
+#
+#
 # Used by for some integrated data sets where
 # correlation is calculated over a combined set of spatial data
 # 
+#####################################################
 # 
 #       generateXCoordsGivenGenData   - retrieve the coordinates from generated data sets  
 # Functions to generate combined set of spatial distance data
@@ -21,6 +26,9 @@
 # Data Transforms
 #
 # convertAbundanceToBinaryDAta          - Converts Abundance count data to Binary observation data
+#
+
+
 
 ################################
 # generateXCoordsGivenGenData

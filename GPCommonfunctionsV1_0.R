@@ -2,6 +2,9 @@
 #
 # Common functions for GP models
 #
+# original code without Github style comments
+#
+#
 #########################################################
 #
 # some common functions used for GP models

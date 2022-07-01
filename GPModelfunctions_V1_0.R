@@ -2,6 +2,8 @@
 #
 # functions to create and fit Greta models
 #
+# original code without Github comments
+#
 # function list:
 # 
 # MGP_tau_fit:                    Fit data with MGP model with tau offset,

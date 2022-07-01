@@ -2,6 +2,10 @@
 #
 # Data generation functions for GP models
 #
+#
+# original code without Github style comments
+#
+#
 ##################################################
 # GenerateSGPData           - Generate multivariate spatially correlated 
 #                             data only, no nugget

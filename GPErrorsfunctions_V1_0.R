@@ -2,6 +2,10 @@
 #
 # Functions for calculating prediction errors
 #
+#
+# original code without Github style comments
+#
+#
 # RMSE is generally used.
 # The posterior predictions of y0 are averaged and used to find the 
 # error at each site for each species
